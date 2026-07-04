@@ -1,45 +1,34 @@
-# yuppie-mcp-fnf
+# yuppie-mcp-tts
 
-阿里云 FNF (Serverless 工作流) MCP Server — 让 AI 助手通过 MCP 协议操作阿里云 FNF。
+TTS (文字转语音) MCP Server — 基于 [edge-tts](https://github.com/rany2/edge-tts) (微软 Edge 免费 TTS 引擎)，无需 API Key，无需配置。
 
 ## 功能
 
-### 流程管理
-- **查询流程详情**: 获取指定流程的名称、类型、执行模式、描述等信息
-- **流程列表**: 批量查询流程，支持分页
+| 工具名 | 说明 |
+|--------|------|
+| `text_to_speech` | 文字转语音，返回 base64 MP3 音频（可选嗓音、语速） |
+| `list_voices` | 列出 50+ 可用嗓音（中英文等多语种） |
+| `text_to_speech_file` | 文字转语音并保存为 MP3 文件到磁盘 |
 
-### 执行管理
-- **异步启动执行**: 启动流程执行并立即返回
-- **同步启动执行**: 启动流程执行并等待完成
-- **停止执行**: 停止正在运行的执行
-- **查询执行状态**: 获取指定执行的状态信息
-- **执行历史列表**: 查询流程的执行记录列表，支持分页
-- **执行步骤详情**: 获取执行的每个步骤的详细信息
+**参数说明：**
+- `voice`: 嗓音名称，如 `en-US-JennyNeural`、`zh-CN-XiaoxiaoNeural`，默认 `en-US-JennyNeural`
+- `speed`: 语速倍率 0.1~3.0，1.0 为正常速度
 
 ## 快速开始
 
 ### 安装
 
 ```bash
-pip install yuppie-mcp-fnf
-```
-
-### 配置
-
-通过环境变量配置阿里云凭证：
-
-```bash
-export FNF_ACCESS_KEY_ID=your_access_key_id
-export FNF_ACCESS_KEY_SECRET=your_access_key_secret
-# 可选：指定 endpoint（默认 cn-hangzhou.fnf.aliyuncs.com）
-export FNF_ENDPOINT=cn-hangzhou.fnf.aliyuncs.com
+pip install yuppie-mcp-tts
 ```
 
 ### 运行
 
 ```bash
-yuppie-mcp-fnf
+yuppie-mcp-tts
 ```
+
+无需任何配置，开箱即用。
 
 ## MCP 集成
 
@@ -50,35 +39,57 @@ yuppie-mcp-fnf
 ```json
 {
   "mcpServers": {
-    "alibabacloud-fnf": {
+    "yuppie-mcp-tts": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["--refresh", "yuppie-mcp-fnf"],
-      "env": {
-        "FNF_ACCESS_KEY_ID": "<your_access_key_id>",
-        "FNF_ACCESS_KEY_SECRET": "<your_access_key_secret>",
-        "FNF_ENDPOINT": "cn-hangzhou.fnf.aliyuncs.com"
-      }
+      "args": ["--refresh", "yuppie-mcp-tts"]
     }
   }
 }
 ```
 
-### Cursor
+### Cursor / Cherry Studio / Claude Desktop / OpenCode
 
-在 `~/.cursor/mcp.json` 中添加同上配置。
+```json
+{
+  "mcpServers": {
+    "yuppie-mcp-tts": {
+      "command": "uvx",
+      "args": ["--refresh", "yuppie-mcp-tts"]
+    }
+  }
+}
+```
 
-### Cherry Studio / Claude Desktop / OpenCode
+## 可用嗓音
 
-参照上方 `env` 字段，按各自 MCP 配置格式填入即可。
+50+ 嗓音覆盖多种语言和地区变体：
 
-## 环境变量
+**英语 (US):** JennyNeural, GuyNeural, AriaNeural, DavisNeural, JaneNeural, JasonNeural, NancyNeural, SaraNeural, TonyNeural
 
-| 变量 | 必填 | 默认值 | 说明 |
-|------|------|--------|------|
-| `FNF_ACCESS_KEY_ID` | 是 | - | 阿里云 AccessKey ID（也兼容 `ALIBABA_CLOUD_ACCESS_KEY_ID`） |
-| `FNF_ACCESS_KEY_SECRET` | 是 | - | 阿里云 AccessKey Secret（也兼容 `ALIBABA_CLOUD_ACCESS_KEY_SECRET`） |
-| `FNF_ENDPOINT` | 否 | `cn-hangzhou.fnf.aliyuncs.com` | FNF 服务地址 |
+**英语 (UK):** SoniaNeural, RyanNeural, LibbyNeural, MaisieNeural
+
+**英语 (AU):** NatashaNeural, WilliamNeural
+
+**英语 (CA):** ClaraNeural, LiamNeural
+
+**英语 (IN):** NeerjaNeural, PrabhatNeural
+
+**中文:** XiaoxiaoNeural, YunxiNeural, YunjianNeural, XiaoyiNeural, YunyangNeural
+
+**其他:** 法语、德语、日语、韩语、葡萄牙语、西班牙语等
+
+使用 `list_voices` 工具可查看完整列表。
+
+## 示例
+
+```text
+用户: 把 "你好世界" 转成语音
+AI: [调用 text_to_speech(text="你好世界", voice="zh-CN-XiaoxiaoNeural")]
+
+用户: 把 "Hello World" 用英式发音保存到 /tmp/hello.mp3
+AI: [调用 text_to_speech_file(text="Hello World", voice="en-GB-SoniaNeural", output_path="/tmp/hello.mp3")]
+```
 
 ## 开发
 
@@ -90,62 +101,7 @@ uv run pytest -v
 ### 本地调试
 
 ```bash
-# 方式1: 直接通过环境变量运行
-FNF_ACCESS_KEY_ID=xxx FNF_ACCESS_KEY_SECRET=xxx uv run yuppie-mcp-fnf
-
-# 方式2: 使用 .env 文件（推荐）
-# 先编辑 .env 填入真实凭证，然后：
-uv run yuppie-mcp-fnf
-
-# 方式3: 使用 MCP Inspector 调试
-npx @modelcontextprotocol/inspector uv run yuppie-mcp-fnf
-```
-
-## 工具列表
-
-| 工具名 | 说明 |
-|--------|------|
-| `fnf_describe_flow` | 获取 FNF 流程信息 |
-| `fnf_describe_flow_inputs` | 获取 FNF 流程信息及入参定义（含类型、示例 JSON） |
-| `fnf_list_flows` | 查询 FNF 流程列表 |
-| `fnf_start_execution` | 异步启动 FNF 流程执行 |
-| `fnf_start_sync_execution` | 同步启动 FNF 流程执行 |
-| `fnf_stop_execution` | 停止 FNF 流程执行 |
-| `fnf_describe_execution` | 查询 FNF 执行状态 |
-| `fnf_list_executions` | 查询 FNF 执行历史列表 |
-| `fnf_get_execution_history` | 获取 FNF 执行步骤详情 |
-
-## 入参定义（fnf_describe_flow_inputs）
-
-`fnf_describe_flow_inputs` 可以从 Flow 的 States 中解析出入参定义，让 AI 知道每个参数的格式。
-
-在 FNF Flow 中创建一个 **模板转换** 节点（`Action: Extensions:TemplateTransform`），
-`template` 字段写入参的 JSON 定义：
-
-### 支持的类型
-
-| 类型 | 含义 | 示例值 |
-|------|------|--------|
-| `string` | 字符串 | `"示例文本"` |
-| `int` | 整数 | `0` |
-| `select` | 下拉选择（需 `enum`） | `"第一个选项"` |
-| `object` | JSON 对象 | `{"key": "value"}` |
-| `array[string]` | 字符串数组 | `["item1", "item2"]` |
-| `file` | 单文件 | `"https://example.com/file.pdf"` |
-| `file-list` | 文件列表 | `["url1", "url2"]` |
-
-### 示例
-
-```json
-{
-    "title": {"type": "string", "label": "文章标题", "required": 1},
-    "partment": {"type": "select", "label": "部门", "enum": ["销售部", "技术部"]},
-    "count": {"type": "int", "label": "数量"},
-    "info": {"type": "object", "label": "详细信息"},
-    "tags": {"type": "array[string]", "label": "标签"},
-    "cover": {"type": "file", "label": "封面URL"},
-    "attachments": {"type": "file-list", "label": "附件列表"}
-}
+npx @modelcontextprotocol/inspector uv run yuppie-mcp-tts
 ```
 
 ## 许可证

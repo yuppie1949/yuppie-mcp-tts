@@ -3,16 +3,16 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "yuppie-mcp-fnf"
-version = "0.1.1"
-description = "MCP Server for Alibaba Cloud FNF (Serverless Workflow)"
+name = "yuppie-mcp-tts"
+version = "0.2.0"
+description = "MCP Server for Text-to-Speech (edge-tts) — no API key required"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 authors = [
     { name = "yuppie", email = "yidaowanli@gmail.com" }
 ]
-keywords = ["mcp", "model-context-protocol", "alibaba-cloud", "fnf", "serverless-workflow"]
+keywords = ["mcp", "model-context-protocol", "tts", "text-to-speech", "edge-tts"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -25,11 +25,7 @@ classifiers = [
 dependencies = [
     "mcp>=1.0.0",
     "pydantic>=2.0.0",
-    "python-dotenv>=1.0.0",
-    "alibabacloud-fnf20190315>=1.0.0",
-    "alibabacloud-credentials>=0.3.0",
-    "alibabacloud-tea-openapi>=0.3.0",
-    "alibabacloud-tea-util>=0.3.0",
+    "edge-tts>=6.1.0",
 ]
 
 [project.optional-dependencies]
@@ -41,14 +37,14 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yuppie1949/yuppie-mcp-fnf"
-Repository = "https://github.com/yuppie1949/yuppie-mcp-fnf"
+Homepage = "https://github.com/yuppie1949/yuppie-mcp-tts"
+Repository = "https://github.com/yuppie1949/yuppie-mcp-tts"
 
 [project.scripts]
-yuppie-mcp-fnf = "yuppie_mcp_fnf.server:main"
+yuppie-mcp-tts = "yuppie_mcp_tts.server:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/yuppie_mcp_fnf"]
+packages = ["src/yuppie_mcp_tts"]
 
 [tool.hatch.build.targets.sdist]
 include = [
