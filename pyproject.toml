@@ -1,0 +1,93 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "yuppie-mcp-fnf"
+version = "0.1.1"
+description = "MCP Server for Alibaba Cloud FNF (Serverless Workflow)"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "yuppie", email = "yidaowanli@gmail.com" }
+]
+keywords = ["mcp", "model-context-protocol", "alibaba-cloud", "fnf", "serverless-workflow"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "alibabacloud-fnf20190315>=1.0.0",
+    "alibabacloud-credentials>=0.3.0",
+    "alibabacloud-tea-openapi>=0.3.0",
+    "alibabacloud-tea-util>=0.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.4.0",
+    "mypy>=1.10.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yuppie1949/yuppie-mcp-fnf"
+Repository = "https://github.com/yuppie1949/yuppie-mcp-fnf"
+
+[project.scripts]
+yuppie-mcp-fnf = "yuppie_mcp_fnf.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/yuppie_mcp_fnf"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+]
+exclude = [
+    "/.git",
+    "/.github",
+    "/.venv",
+    "/__pycache__",
+    "/.pytest_cache",
+    "/.mypy_cache",
+    "/.ruff_cache",
+    "/dist",
+    "/build",
+    "/.env",
+    "/.env.example",
+    "/docs",
+    "/tests",
+    "/.neuralmemory",
+    "/scripts",
+    "/.DS_Store",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
