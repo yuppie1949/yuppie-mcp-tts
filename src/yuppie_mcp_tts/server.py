@@ -84,9 +84,9 @@ async def tool_text_to_speech_file(
 
 
 def main() -> None:
-    transport = os.getenv("MCP_TRANSPORT", "stdio")
+    transport = os.getenv("MCP_TRANSPORT", "streamable-http")
     if transport == "streamable-http":
-        mcp.settings.port = int(os.getenv("MCP_PORT", "8000"))
+        mcp.settings.port = int(os.getenv("MCP_PORT", "8080"))
         mcp.run(transport="streamable-http")
     else:
         mcp.run()
