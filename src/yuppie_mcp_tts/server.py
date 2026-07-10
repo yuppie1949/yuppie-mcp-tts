@@ -13,6 +13,7 @@ from .tools import tts
 
 mcp = FastMCP(
     "yuppie_mcp",
+    host=os.getenv("MCP_HOST", "127.0.0.1"),
     instructions=(
         "TTS (文字转语音) MCP Server —— 基于 edge-tts (微软 Edge 免费 TTS 引擎)，"
         "无需 API Key。支持 50+ 嗓音、可调速、返回 base64 音频或保存到文件。"
@@ -84,9 +85,9 @@ async def tool_text_to_speech_file(
 
 
 def main() -> None:
-    transport = os.getenv("MCP_TRANSPORT", "streamable-http")
+    transport = os.getenv("MCP_TRANSPORT", "stdio")
     if transport == "streamable-http":
-        mcp.settings.port = int(os.getenv("MCP_PORT", "8080"))
+        mcp.settings.port = int(os.getenv("MCP_PORT", "8000"))
         mcp.run(transport="streamable-http")
     else:
         mcp.run()
