@@ -30,14 +30,14 @@ uv run yuppie-mcp-tts
 
 ### 核心模块
 
-- **`server.py`**: MCP Server 入口，FastMCP 注册所有工具
+- **`server.py`**: MCP Server 入口，MCPServer 注册所有工具
 - **`tools/tts.py`**: TTS 工具实现
   - Pydantic `BaseModel`（`str_strip_whitespace` + `extra="forbid"`）+ `async def` 实现 + markdown 输出 + try/except 友好错误
   - edge-tts 原生异步，无需 `asyncio.to_thread()`
 
 ### 传输模式
 
-仅支持 stdio（MCP 主流用法）。`server.py` 直接 `mcp.run()`。
+默认 stdio（MCP 主流用法）。`main()` 根据 `MCP_TRANSPORT` 环境变量切换：`streamable-http` 时通过 `run()` 的 `host`/`port` 参数启动（默认 `127.0.0.1:8000`）。
 
 ## 代码规范
 

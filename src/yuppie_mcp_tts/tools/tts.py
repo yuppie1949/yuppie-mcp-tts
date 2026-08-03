@@ -96,9 +96,7 @@ def _rate_str(speed: float) -> str:
 
 def list_voices() -> str:
     """列出所有可用的 TTS 嗓音"""
-    voices_info = "\n".join(
-        f"  {i+1}. {v}" for i, v in enumerate(AVAILABLE_VOICES)
-    )
+    voices_info = "\n".join(f"  {i + 1}. {v}" for i, v in enumerate(AVAILABLE_VOICES))
     return (
         f"✅ 可用嗓音（共 {len(AVAILABLE_VOICES)} 个）\n\n"
         f"{voices_info}\n\n"
